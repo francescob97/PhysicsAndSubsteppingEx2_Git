@@ -15,6 +15,10 @@ public:
 	AOscillatorSystem();
 	virtual void Tick(float DeltaTime) override;
 
+	// Start the simulation
+	UFUNCTION(BlueprintCallable)
+	void SetStartSimulation(bool bSimulation);
+
 protected:	
 	virtual void BeginPlay() override;
 
@@ -23,6 +27,9 @@ protected:
 
 	// Draw equilibrium debug line
 	void DrawEquilibriumPosition() const;
+
+	// Simulate the Simple Harmonic Motion
+	void SimulateMotion();
 
 	// Increase initial displacement of the spring
 	UFUNCTION(BlueprintCallable)
@@ -56,11 +63,23 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Spring Properties")
 	float SpringStiffness = 100.f;
 
-	// Current displacement of the spring [cm]. Negative if compression, positive if extension //TODO
+	// Current displacement of the spring [cm]. Negative if compression, positive if extension
 	UPROPERTY(VisibleAnywhere, Category="Spring Properties")
 	float SpringCurrentDisplacement;
 
 private:
+	// Current velocity on the Z axis [cm/s]
+	float VelocityZ = 0.f;
+
+	// Current acceleration on the Z axis [cm/s^2]
+	float AccelerationZ;
+
+	// Amplitude in the last period [cm]
+	float Amplitude;
+
+	// Last period [s]
+	float Period;
+	
 	// Index of the simulation state
 	bool bStartSimulation = false;
 
