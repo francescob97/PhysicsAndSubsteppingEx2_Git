@@ -48,6 +48,9 @@ private:
 	// Convert a bool to FText
 	FText BoolToText(bool value);
 
+	// Add a segment to the Graph HUD
+	void DrawGraphData(const TArray<float>& Values, const FVector2D YValuesInterval, const FLinearColor Color);
+
 	// Render a statistic onto the HUD canvas
 	void RenderStatistic(const TCHAR* title, const FText& value, const FLinearColor& valueColor = FLinearColor::White);
 
@@ -63,4 +66,16 @@ private:
 
 	// The line height to separate each entry
 	float LineHeight = 16.f;
+
+	// Size of the graph
+	float GraphSize = 200.f;
+	
+	// Top left coordinates of the graph
+	FVector2D TopLeftCorner;
+
+	// Bottom left coordinates of the graph
+	FVector2D BottomLeftCorner;	
+	
+	// Number of values tracked for the Graph
+	int32 MaxTrackedValues;
 };

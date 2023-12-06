@@ -72,6 +72,13 @@ void AOscillatorSystem::SimulateMotion()
 		EquilibriumPosition + LINE_EQUILIBRIUM_LENGTH * FVector::RightVector,
 		25.f,
 		FColor::Red);
+
+	SpringDisplacementsOverTime.Add(SpringCurrentDisplacement);
+	
+	while (SpringDisplacementsOverTime.Num() > MaxTrackedValues)
+	{
+		SpringDisplacementsOverTime.RemoveAt(0);
+	}	
 }
 
 void AOscillatorSystem::IncreaseCubeDisplacement()

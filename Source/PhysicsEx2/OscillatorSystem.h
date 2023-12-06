@@ -67,6 +67,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="Spring Properties")
 	float SpringCurrentDisplacement;
 
+	// Number of values tracked for the Graph
+	UPROPERTY(EditAnywhere, Category="Simulation Properties")
+	int32 MaxTrackedValues = 1500;
+
 private:
 	// Current velocity on the Z axis [cm/s]
 	float VelocityZ = 0.f;
@@ -94,6 +98,9 @@ private:
 
 	// Equilibrium position of the spring
 	FVector EquilibriumPosition;
+
+	// Array of MaxTrackedValues displacements of the spring. Used to draw displacement graph
+	TArray<float> SpringDisplacementsOverTime;
 	
 	// Allow the Debug HUD access to this class
 	friend class ADebugHUD;	

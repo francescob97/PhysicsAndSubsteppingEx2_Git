@@ -7,6 +7,8 @@
 #include "Engine/Canvas.h"
 #include "PhysicsEx2/OscillatorSystem.h"
 
+#define INVERSE_GRAPH -1.f
+
 /*
  * Construct the debugging HUD
  **********************************************************/
@@ -48,6 +50,9 @@ void ADebugHUD::DrawHUD()
 	Super::DrawHUD();
 	
 	X = Y = 20.f;
+	const FVector2D ViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
+	TopLeftCorner = FVector2D(ViewportSize.X - X - GraphSize, Y); // A
+	BottomLeftCorner= FVector2D(TopLeftCorner.X, TopLeftCorner.Y + GraphSize); // B	
 	
 	if(OscillatorSystemActor)
 	{		
@@ -59,8 +64,47 @@ void ADebugHUD::DrawHUD()
 			AddFloat(L"Spring Initial Displacement [m]: ", OscillatorSystem->SpringInitialDisplacement * CM_TO_METER);
 			AddFloat(L"Spring Current Displacement [m]: ", OscillatorSystem->SpringCurrentDisplacement * CM_TO_METER);
 			AddFloat(L"Velocity [m/s]: ", OscillatorSystem->VelocityZ * CM_TO_METER);
-			AddFloat(L"Acceleration [m/s^2]: ", OscillatorSystem->AccelerationZ * CM_TO_METER);			
+			AddFloat(L"Acceleration [m/s^2]: ", OscillatorSystem->AccelerationZ * CM_TO_METER);
+
+			Y = 20.f;
+			MaxTrackedValues = OscillatorSystem->MaxTrackedValues;
+			DrawRect(FLinearColor(0, 0, 0, 0.5),  BottomLeftCorner.X, TopLeftCorner.Y, GraphSize, GraphSize);
+			DrawGraphData(OscillatorSystem->SpringDisplacementsOverTime, FVector2D(-100.f, 100.f), FColor::Blue);
 		}
+	}	
+}
+
+void ADebugHUD::DrawGraphData(const TArray<float>& Values, const FVector2D YValuesInterval, const FLinearColor Color)
+{	
+	for (int32 i = 1; i < Values.Num(); i++)
+	{	
+		const float PreviousValue = Values[i - 1];
+		const float CurrentValue = Values[i];
+
+		const float PreviousMappedY = FMath::GetMappedRangeValueClamped(
+			FVector2D(YValuesInterval.X, YValuesInterval.Y),
+			FVector2D(BottomLeftCorner.Y, TopLeftCorner.Y),
+			PreviousValue * INVERSE_GRAPH
+		);
+
+		const float CurrentMappedY = FMath::GetMappedRangeValueClamped(
+			FVector2D(YValuesInterval.X, YValuesInterval.Y),
+			FVector2D(BottomLeftCorner.Y, TopLeftCorner.Y),
+			CurrentValue * INVERSE_GRAPH
+		);
+
+		const FVector2D StartPoint(TopLeftCorner.X + (GraphSize/ MaxTrackedValues) * i - 1, PreviousMappedY);
+		const FVector2D EndPoint(TopLeftCorner.X  + (GraphSize/ MaxTrackedValues) * i, CurrentMappedY);
+
+		DrawLine(StartPoint.X, StartPoint.Y, EndPoint.X, EndPoint.Y, Color);		
+	}
+
+	if(Values.Num() > 0)
+	{
+		const FString DisplayText = FString::Printf(TEXT("Displacement: %f [m]"), Values.Last() / 100.f);
+		FCanvasTextItem item1(FVector2D(TopLeftCorner.X - HorizontalOffset, Y * 1), FText::FromString(DisplayText), MainFont, Color);
+		item1.EnableShadow(FLinearColor(0.f, 0.f, 0.f));
+		Canvas->DrawItem(item1);	
 	}	
 }
 
