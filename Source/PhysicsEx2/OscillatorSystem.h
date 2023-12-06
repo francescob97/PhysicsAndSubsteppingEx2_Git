@@ -94,4 +94,7 @@ private:
 
 	// Equilibrium position of the spring
 	FVector EquilibriumPosition;
+	
+	// Allow the Debug HUD access to this class
+	friend class ADebugHUD;	
 };
