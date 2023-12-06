@@ -72,6 +72,9 @@ protected:
 	int32 MaxTrackedValues = 1500;
 
 private:
+	// Velocity on the previous frame. Used to check velocity changes [cm/s]
+	float LastVelocity = 0.f;
+	
 	// Current velocity on the Z axis [cm/s]
 	float VelocityZ = 0.f;
 
@@ -83,6 +86,15 @@ private:
 
 	// Last period [s]
 	float Period;
+
+	// Number of peaks. Used to count the periods
+	int32 PeakCounter = -1;
+
+	// Period index to the frames tracked by the simulation. Used to draw period in the Graph
+	int32 PeriodIndex = 0;
+
+	// Last period index to the frames tracked by the simulation. Used to draw period in the Graph
+	int32 LastPeriodIndex = 0;
 	
 	// Index of the simulation state
 	bool bStartSimulation = false;

@@ -64,8 +64,22 @@ void AOscillatorSystem::SimulateMotion()
 
 	SpringCurrentDisplacement = DeltaZ;
 	AccelerationZ = (Force / CubeMass).Z;
-	
+
+	LastVelocity = VelocityZ;
 	VelocityZ = CubeMesh->GetComponentVelocity().Z;
+
+	const float ZeroTolerance = 0.001f;
+	if ((FMath::Abs(VelocityZ) > ZeroTolerance && FMath::Abs(LastVelocity) > ZeroTolerance) && FMath::Sign(LastVelocity) != FMath::Sign(VelocityZ))
+	{
+		if(PeakCounter % 2 == 0)
+		{
+			Amplitude = DeltaZ; 
+			LastPeriodIndex = PeriodIndex;
+			PeriodIndex = SpringDisplacementsOverTime.Num();
+			Period = (PeriodIndex - LastPeriodIndex) * GetWorld()->GetDeltaSeconds();	
+		}
+		++PeakCounter;				
+	}
 	
 	DrawDebugDirectionalArrow(GetWorld(),
 		CubeMesh->GetComponentLocation() + LINE_EQUILIBRIUM_LENGTH * FVector::RightVector,
@@ -78,6 +92,8 @@ void AOscillatorSystem::SimulateMotion()
 	while (SpringDisplacementsOverTime.Num() > MaxTrackedValues)
 	{
 		SpringDisplacementsOverTime.RemoveAt(0);
+		LastPeriodIndex = FMath::Clamp(LastPeriodIndex - 1, 0 , MaxTrackedValues);
+		PeriodIndex = FMath::Clamp(PeriodIndex - 1, 0 , MaxTrackedValues);
 	}	
 }
 

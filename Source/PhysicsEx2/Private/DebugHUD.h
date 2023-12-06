@@ -48,12 +48,18 @@ private:
 	// Convert a bool to FText
 	FText BoolToText(bool value);
 
-	// Add a segment to the Graph HUD
-	void DrawGraphData(const TArray<float>& Values, const FVector2D YValuesInterval, const FLinearColor Color);
-
 	// Render a statistic onto the HUD canvas
 	void RenderStatistic(const TCHAR* title, const FText& value, const FLinearColor& valueColor = FLinearColor::White);
 
+	// Add a segment to the Graph HUD
+	void DrawGraphData(const TArray<float>& Values, const FVector2D YValuesInterval, const FLinearColor Color);
+
+	// Add Amplitude segment to the Graph HUD
+	void DrawAmplitude(const float Amplitude, const int32 AmpIndex, const FVector2D YValuesInterval, const FLinearColor Color);
+
+	// Add Period segment to the Graph HUD
+	void DrawPeriod(const float Period, const int32 StartIndex, const int32 EndIndex, const FLinearColor Color); //FVector2D PeriodInterval
+	
 	// Font used to render the debug information
 	UPROPERTY(Transient)
 	UFont* MainFont = nullptr;

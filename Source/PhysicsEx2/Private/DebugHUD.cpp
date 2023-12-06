@@ -70,6 +70,8 @@ void ADebugHUD::DrawHUD()
 			MaxTrackedValues = OscillatorSystem->MaxTrackedValues;
 			DrawRect(FLinearColor(0, 0, 0, 0.5),  BottomLeftCorner.X, TopLeftCorner.Y, GraphSize, GraphSize);
 			DrawGraphData(OscillatorSystem->SpringDisplacementsOverTime, FVector2D(-100.f, 100.f), FColor::Blue);
+			DrawAmplitude(OscillatorSystem->Amplitude, OscillatorSystem->LastPeriodIndex, FVector2D(-100.f, 100.f), FColor::Red);
+			DrawPeriod(OscillatorSystem->Period, OscillatorSystem->LastPeriodIndex, OscillatorSystem->PeriodIndex, FColor::Green);
 		}
 	}	
 }
@@ -101,11 +103,41 @@ void ADebugHUD::DrawGraphData(const TArray<float>& Values, const FVector2D YValu
 
 	if(Values.Num() > 0)
 	{
-		const FString DisplayText = FString::Printf(TEXT("Displacement: %f [m]"), Values.Last() / 100.f);
+		const FString DisplayText = FString::Printf(TEXT("Displacement: %f [cm]"), Values.Last());
 		FCanvasTextItem item1(FVector2D(TopLeftCorner.X - HorizontalOffset, Y * 1), FText::FromString(DisplayText), MainFont, Color);
 		item1.EnableShadow(FLinearColor(0.f, 0.f, 0.f));
 		Canvas->DrawItem(item1);	
 	}	
+}
+
+void ADebugHUD::DrawAmplitude(const float Amplitude, const int32 AmpIndex, const FVector2D YValuesInterval, const FLinearColor Color)
+{
+	const float CurrentMappedY = FMath::GetMappedRangeValueClamped(
+			FVector2D(YValuesInterval.X, YValuesInterval.Y),
+			FVector2D(BottomLeftCorner.Y, TopLeftCorner.Y),
+			Amplitude * INVERSE_GRAPH
+		);
+
+	const FVector2D StartPoint(TopLeftCorner.X + (GraphSize/ MaxTrackedValues) * AmpIndex, Y + (BottomLeftCorner.Y - TopLeftCorner.Y) *.5f);
+	const FVector2D EndPoint(TopLeftCorner.X  + (GraphSize/ MaxTrackedValues) * AmpIndex, CurrentMappedY);
+	DrawLine(StartPoint.X, StartPoint.Y, EndPoint.X, EndPoint.Y, Color);
+
+	const FString DisplayText = FString::Printf(TEXT("Amplitude: %f [cm]"), Amplitude);
+	FCanvasTextItem item1(FVector2D(TopLeftCorner.X - HorizontalOffset, Y * 2), FText::FromString(DisplayText), MainFont, Color);
+	item1.EnableShadow(FLinearColor(0.f, 0.f, 0.f));
+	Canvas->DrawItem(item1);	
+}
+
+void ADebugHUD::DrawPeriod(const float Period, const int32 StartIndex, const int32 EndIndex, const FLinearColor Color)
+{	
+	const FVector2D StartPoint(BottomLeftCorner.X + (GraphSize/ MaxTrackedValues) * StartIndex, BottomLeftCorner.Y - Y);
+	const FVector2D EndPoint(TopLeftCorner.X  + (GraphSize/ MaxTrackedValues) * EndIndex, BottomLeftCorner.Y - Y);
+	DrawLine(StartPoint.X, StartPoint.Y, EndPoint.X, EndPoint.Y, Color);
+
+	const FString DisplayText = FString::Printf(TEXT("Period: %f [s]"), Period);
+	FCanvasTextItem item1(FVector2D(TopLeftCorner.X - HorizontalOffset, Y * 3), FText::FromString(DisplayText), MainFont, Color);
+	item1.EnableShadow(FLinearColor(0.f, 0.f, 0.f));
+	Canvas->DrawItem(item1);
 }
 
 FText ADebugHUD::CStringToText(const TCHAR* text)
