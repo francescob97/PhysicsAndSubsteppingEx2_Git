@@ -58,15 +58,18 @@ void AOscillatorSystem::SimulateMotion()
 
 	// Using Hooke law: F = -K * DeltaZ
 	const float DeltaZ = - (CubeMesh->GetComponentLocation().Z - EquilibriumPosition.Z);
-	const FVector Force = - SpringStiffness * DeltaZ * FVector::DownVector;
-	
-	CubeMesh->AddForce(Force);
+	const FVector SpringForce = - SpringStiffness * DeltaZ * FVector::DownVector;
+	const FVector DampingForce = -DampingCoefficient * CubeMesh->GetComponentVelocity().Z * FVector::UpVector;
+	const FVector TotalForce = SpringForce + DampingForce;
+
+	CubeMesh->AddForce(SpringForce + DampingForce);
 
 	SpringCurrentDisplacement = DeltaZ;
-	AccelerationZ = (Force / CubeMass).Z;
+	AccelerationZ = (TotalForce / CubeMass).Z;
 
 	LastVelocity = VelocityZ;
 	VelocityZ = CubeMesh->GetComponentVelocity().Z;
+	
 
 	const float ZeroTolerance = 0.001f;
 	if ((FMath::Abs(VelocityZ) > ZeroTolerance && FMath::Abs(LastVelocity) > ZeroTolerance) && FMath::Sign(LastVelocity) != FMath::Sign(VelocityZ))

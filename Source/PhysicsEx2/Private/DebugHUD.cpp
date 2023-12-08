@@ -60,6 +60,7 @@ void ADebugHUD::DrawHUD()
 		{
 			AddBool(L"Start Simulation: ", OscillatorSystem->bStartSimulation);
 			AddFloat(L"Mass [Kg]: ", OscillatorSystem->CubeMass);
+			AddFloat(L"Damping coefficient []: ", OscillatorSystem->DampingCoefficient);
 			AddFloat(L"Spring Stiffness [N/m]: ", OscillatorSystem->SpringStiffness);
 			AddFloat(L"Spring Initial Displacement [m]: ", OscillatorSystem->SpringInitialDisplacement * CM_TO_METER);
 			AddFloat(L"Spring Current Displacement [m]: ", OscillatorSystem->SpringCurrentDisplacement * CM_TO_METER);

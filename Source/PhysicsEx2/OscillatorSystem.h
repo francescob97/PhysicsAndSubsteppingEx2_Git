@@ -55,6 +55,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Cube Properties")
 	float CubeMass = 50;
 
+	// Coefficent for damping 
+	UPROPERTY(EditAnywhere, Category="Cube Properties")
+	float DampingCoefficient = .1f;
+
 	// Initial displacement of the spring [cm]
 	UPROPERTY(EditAnywhere, Category="Spring Properties")
 	float SpringInitialDisplacement;
