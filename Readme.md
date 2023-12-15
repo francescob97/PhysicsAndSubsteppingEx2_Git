@@ -78,7 +78,7 @@ This section depicts the behavior of the system without having enabled substeppi
 
 | <img src="Documentation/Images/4_60FPSnoSubstep.gif" alt="60FPSnoSubstep" style="width:160px;height:160px;"> | <img src="Documentation/Images/3_30FPSnoSubstep.gif" alt="30FPSnoSubstep" style="width:160px;height:160px;">  |  <img src="Documentation/Images/2_15FPSnoSubstep.gif" alt="15FPSnoSubstep" style="width:160px;height:160px;">  | <img src="Documentation/Images/1_5FPSnoSubstep.gif" alt="5FPSnoSubstep" style="width:160px;height:160px;"> |
 |:------------------------------------------------------------------------------------------------------------:| :---: |:---:|:--:|
-|                                       No substep, 60 FPS<br/>T: 4.43 s                                       | No substep, 30 FPS<br/>T: 4.43 s<  | No substep, 15 FPS<br/>T: 8.86 s | No substep, 5 FPS<br/>T: 26.8 s |
+|                                       No substep, 60 FPS<br/>T: 4.43 s                                       | No substep, 30 FPS<br/>T: 4.43 s  | No substep, 15 FPS<br/>T: 8.86 s | No substep, 5 FPS<br/>T: 26.8 s |
 
 In the following part, however, substepping was enabled to make the simulation consistent.
 However, if the Max Substep Delta Time is too small, the simulation can become unstable and diverge. This is because the engine is taking too many sub-steps, which can cause the simulation to become inaccurate and unstable.
