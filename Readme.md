@@ -1,4 +1,4 @@
-# LyraStarterGameEx1
+# PhysicsAndSubstepping
 This document provides an overview of the Simple Harmonic Motion (SHM) simulation implemented in UE5. The simulation involves a spring attached to a cube (mass) in a zero-gravity environment.
 <br/>The primary objective is to ensure that the harmonic motion remains consistent across varying frame rates using only physical forces, using sub-stepping technique.
 
